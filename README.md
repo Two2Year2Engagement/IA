@@ -3,6 +3,6 @@
 * IAs disponíveis: Algoritmo Genético
 *
 * Binary F6 Function:
-* double temp1 = Math.Sin(System.Math.Sqrt(x * x + y * y));
-* double temp2 = 1 + 0.001 * (x * x + y * y);
-* double result = 0.5 + (temp1 * temp1 - 0.5) / (temp2 * temp2);
+* double mant = Math.sin(Math.sqrt(x*x +y*y));
+* double div = (x*x +y*y);
+* double res = 0.5 + (mant*mant - 0.5)/(1 + 0.001*div*div);
