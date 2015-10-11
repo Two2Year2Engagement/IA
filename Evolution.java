@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.util.Random;
 /**
  *
  * @author jnboeira
@@ -46,53 +46,114 @@ public class Evolution {
         this.bestFitness = bestFitness;
     }
     
-    public void fitness(int[] gene, int i){
-        double x = convX(gene);
-        double y = convY(gene);
-        fitness[i] = bf6(x, y);
-        if(fitness[i] > bestFitness){
-            bestFitness = fitness[i];
-        }
+    public void fitness(Chromossome[] chrom){
+        for(int i = 0;i<100;i++){
+            int[] gene = chrom[i].getGene();
+            for(int k=0;k<44;k++){
+                System.out.print(gene[k]);
+            }
+            System.out.println();
+            double x = convX(gene);
+            double y = convY(gene);
+            fitness[i] = bf6(x, y);
+            //System.out.println("Fitness "+i+": "+fitness[i]);
+            if(fitness[i] > bestFitness){
+                bestFitness = fitness[i];
+            }
             
+            
+        }
     }
     
-    public double bf6(double x, double y){
+    private double bf6(double x, double y){
         double mant = Math.sin(Math.sqrt(x*x +y*y));
         double div = (x*x +y*y);
         double res = 0.5 + (mant*mant - 0.5)/(1 + 0.001*div*div);
-        System.out.println("bf6: "+res);
+        //System.out.println("bf6: "+res);
         return res;
     }
     
-    public double convX(int[] gene){
+    private double convX(int[] gene){
         double sum = 0;
         for(int i=0;i<22;i++){
             sum += gene[i]*Math.pow(2.0, (double) i);
         }
         sum = sum/20971.5 - 100;
-        System.out.println("X: "+sum);
+        //System.out.println("X: "+sum);
         return sum;
     }
     
-    public double convY(int[] gene){
+    private double convY(int[] gene){
         double sum = 0;
         for(int i=22;i<44;i++){
             sum += gene[i]*Math.pow(2.0, (double) (i - 22));
         }
         sum = sum/20971.5 - 100;
-        System.out.println("Y: "+sum);
+        //System.out.println("Y: "+sum);
         return sum;
     }
     
-    public void crossover(){
-    
+    public void crossover(Chromossome[] chrom, Chromossome[] aux){
+        for(int i =0;i < 100;i++){
+            //System.out.println("Iteracao"+i);
+            int i1 = tournament(), i2 = tournament();
+            //System.out.println("I1: "+i1+" I2: "+i2);
+            for(int k = 0; k < 22;k++){
+                aux[i].setGeneI(chrom[i1].getGeneI(k), k);
+            }
+            for(int k = 22; k < 44;k++){
+                aux[i].setGeneI(chrom[i2].getGeneI(k), k);
+            }
+        }
+        mutate(aux);
     }
     
-    public void mutate(){
-    
+    private void mutate(Chromossome[] aux){
+        Random rg = new Random();
+        for(int i =0;i < 100;i++){
+            int randMut = rg.nextInt(i+300) % 10;
+            //System.out.println("Mut? "+randMut);
+            if(randMut == 1){
+                int randGene = rg.nextInt(randMut+i+100) % 44;
+                //System.out.println("Gene: "+randGene);
+                int valGene = rg.nextInt(randMut+i+100) % 2;
+                //System.out.println("Val: "+valGene);
+                aux[i].setGeneI(valGene, randGene);
+            }
+        }
     }
     
-    public void tournament(){
+    public void convertGenes(Chromossome[] chrom, Chromossome[] aux){
+        for(int i = 0;i < 100;i++){
+            for(int k = 0;k < 44;k++){
+                chrom[i].setGeneI(aux[i].getGeneI(k), k);
+            }
+        }
+    }
     
+    private int tournament(){
+        Random rg = new Random();
+        int[] idx = new int[5];        
+        for(int i = 0;i < 5;i++){
+            idx[i] = rg.nextInt(250+i) % 100;
+            //System.out.println("IDX: "+idx[i]);
+        }
+        int best = getBestIdx(idx);
+    
+        return best;
+    }
+    
+    private int getBestIdx(int[] idx){
+        double bestFit = -1;
+        int bestI = 0;
+        for(int i = 0;i < 5;i++){
+            if(fitness[idx[i]] > bestFit){
+                bestFit = fitness[idx[i]];
+                bestI = idx[i];
+            }
+        }
+        //System.out.println("Best I: "+bestI);
+        
+        return bestI;
     }
 }

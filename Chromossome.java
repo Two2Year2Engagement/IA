@@ -26,9 +26,9 @@ public class Chromossome {
         gene = new int[44];
         for(int i=0;i<44;i++){
             gene[i] = -1;
-            //System.out.print(gene[i]);
+            System.out.print(gene[i]);
         }
-        //System.out.println();
+        System.out.println();
     }
 
     public int[] getGene() {
