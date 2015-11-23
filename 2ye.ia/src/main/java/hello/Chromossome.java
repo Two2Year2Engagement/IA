@@ -1,4 +1,3 @@
-package hello;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -15,21 +14,21 @@ public class Chromossome {
     public Chromossome(int j){
         gene = new int[44];
         Random rg = new Random();
-        System.out.print("Chromosome "+j+": ");
+        //System.out.print("Chromosome "+j+": ");
         for(int i=0;i<44;i++){
             gene[i] = ((rg.nextInt(997*(3+j))) + rg.nextInt(1373*(3+i))) % 2;
-            System.out.print(gene[i]);
+            //System.out.print(gene[i]);
         }
-        System.out.println();
+        //System.out.println();
     }
     
     public Chromossome(){
         gene = new int[44];
         for(int i=0;i<44;i++){
             gene[i] = -1;
-            System.out.print(gene[i]);
+            //System.out.print(gene[i]);
         }
-        System.out.println();
+        //System.out.println();
     }
 
     public int[] getGene() {
@@ -46,6 +45,13 @@ public class Chromossome {
 
     public void setGeneI(int gene, int i) {
         this.gene[i] = gene;
+    }
+    
+    public void printGene(){
+        for(int aux : gene){
+            System.out.print(aux);
+        }
+        System.out.println();
     }
   
 }

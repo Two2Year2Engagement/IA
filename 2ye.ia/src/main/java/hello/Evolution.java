@@ -1,4 +1,3 @@
-package hello;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,6 +11,7 @@ import java.util.Random;
 public class Evolution {
     private double[] fitness;
     private double bestFitness;
+    private int bestFitnessI;
     
     public Evolution(){
         bestFitness = -1;
@@ -21,6 +21,7 @@ public class Evolution {
             fitness[i] = -1;
             //System.out.println(fitness[i]);
         }
+        bestFitnessI = 0;
     }
 
     public double[] getFitness() {
@@ -50,20 +51,20 @@ public class Evolution {
     public void fitness(Chromossome[] chrom){
         for(int i = 0;i<100;i++){
             int[] gene = chrom[i].getGene();
-            for(int k=0;k<44;k++){
-                System.out.print(gene[k]);
-            }
-            System.out.println();
+            //for(int k=0;k<44;k++){
+            //    System.out.print(gene[k]);
+            //}
+            //System.out.println();
             double x = convX(gene);
             double y = convY(gene);
             fitness[i] = bf6(x, y);
             //System.out.println("Fitness "+i+": "+fitness[i]);
             if(fitness[i] > bestFitness){
                 bestFitness = fitness[i];
-            }
-            
-            
+                bestFitnessI = i;
+            }    
         }
+         System.out.println("Best Fitness "+bestFitness);
     }
     
     private double bf6(double x, double y){
@@ -95,9 +96,14 @@ public class Evolution {
     }
     
     public void crossover(Chromossome[] chrom, Chromossome[] aux){
-        for(int i =0;i < 100;i++){
+        Random rg = new Random();
+        int rand = rg.nextInt(1000001) % 100;
+        for(int i =0;i < rand;i++){
             //System.out.println("Iteracao"+i);
             int i1 = tournament(), i2 = tournament();
+            while(i1 == i2){
+                i2 = tournament();
+            }
             //System.out.println("I1: "+i1+" I2: "+i2);
             for(int k = 0; k < 22;k++){
                 aux[i].setGeneI(chrom[i1].getGeneI(k), k);
@@ -105,6 +111,11 @@ public class Evolution {
             for(int k = 22; k < 44;k++){
                 aux[i].setGeneI(chrom[i2].getGeneI(k), k);
             }
+            //chrom[i1].printGene(); chrom[i2].printGene();
+            //aux[i].printGene(); System.out.println();
+        }
+        for(int i = rand;i < 100;i++){
+            aux[i].setGene(chrom[i].getGene());
         }
         mutate(aux);
     }
@@ -114,13 +125,13 @@ public class Evolution {
         for(int i =0;i < 100;i++){
             int randMut = rg.nextInt(i+300) % 10;
             //System.out.println("Mut? "+randMut);
-            if(randMut == 1){
-                int randGene = rg.nextInt(randMut+i+100) % 44;
+            //if(randMut == 1){
+                int randGene = rg.nextInt(randMut+i+139) % 44;
                 //System.out.println("Gene: "+randGene);
-                int valGene = rg.nextInt(randMut+i+100) % 2;
+                int valGene = rg.nextInt(randMut+i+1001) % 2;
                 //System.out.println("Val: "+valGene);
                 aux[i].setGeneI(valGene, randGene);
-            }
+            //}
         }
     }
     
@@ -137,7 +148,6 @@ public class Evolution {
         int[] idx = new int[5];        
         for(int i = 0;i < 5;i++){
             idx[i] = rg.nextInt(250+i) % 100;
-            //System.out.println("IDX: "+idx[i]);
         }
         int best = getBestIdx(idx);
     
@@ -157,4 +167,10 @@ public class Evolution {
         
         return bestI;
     }
+
+    public int getBestFitnessI() {
+        return bestFitnessI;
+    }
+    
+    
 }
